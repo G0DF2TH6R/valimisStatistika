@@ -1,18 +1,29 @@
-import java.time.chrono.Era;
 import java.util.ArrayList;
+import java.util.prefs.PreferencesFactory;
 
 public class ValimisStatistika {
+    public ValimisStatistika() {
+    }
+
     public static void main(String[] args) {
         Valija x = new Valija("Mati", "Torm", "50202100267");
-        Erakond ref = new Erakond("Reformierakond");
-        Erakond sots = new Erakond("Sotsid");
-        ArrayList<Erakond> erakonnad = new ArrayList<>();
-        erakonnad.add(sots);
-        erakonnad.add(ref);
-        x.valiErakond(ref);
-        ref.getValijad();
-        x.valiErakond(sots);
-        sots.getValijad();
+        Erakond keskerakond = new Erakond("Eesti Keskerakond");
+        Erakond sotsiaaldemokraadid = new Erakond("Sotsiaaldemokraatlik Erakond");
+        Erakond isamaa = new Erakond("ISAMAA Erakond");
+        Erakond rohelised = new Erakond("Erakond Eestimaa Rohelised");
+        Erakond parempoolsed = new Erakond("Erakond Parempoolsed");
+        Erakond ekre = new Erakond("Eesti Konservatiivne Rahvaerakond");
+        Erakond eesti200 = new Erakond("Erakond Eesti 200");
+        Erakond reformierakond = new Erakond("Eesti Reformierakond");
+
+        ArrayList<Erakond> erakonnad = new ArrayList();
+
+        erakonnad.add(sotsiaaldemokraadid);
+        erakonnad.add(reformierakond);
+        x.valiErakond(reformierakond);
+        reformierakond.getValijad();
+        x.valiErakond(sotsiaaldemokraadid);
+        sotsiaaldemokraadid.getValijad();
         System.out.println(Statistika.valijateArv(erakonnad));
     }
 }
