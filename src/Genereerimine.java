@@ -1,9 +1,15 @@
+import java.util.ArrayList;
+
+import static java.lang.Math.random;
+
 public class Genereerimine {
-    public void valijateGenereerimine(){
-
-        for (int i = 0; i <100; i++) {
-
-            Valija uus = new Valija("a","b", "c");
+    public static void valijateGenereerimine(int n, ArrayList<Erakond> erakondadeList){
+        ArrayList<Valija> valijadList = new ArrayList<Valija>(n);
+        for (int i = 0; i <n; i++) {
+            Valija uus =new Valija("a", "b", "c");
+            int erakondadeIndex = (int)(random()*erakondadeList.size());
+            Erakond valitavErakond = erakondadeList.get(erakondadeIndex) ;
+            uus.valiErakond(valitavErakond);
         }
 
     }

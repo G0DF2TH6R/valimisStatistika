@@ -20,10 +20,23 @@ public class ValimisStatistika {
 
         erakonnad.add(sotsiaaldemokraadid);
         erakonnad.add(reformierakond);
+        erakonnad.add(isamaa);
+        erakonnad.add(rohelised);
+        erakonnad.add(keskerakond);
+        erakonnad.add(ekre);
+        erakonnad.add(parempoolsed);
+        erakonnad.add(eesti200);
+
+
         x.valiErakond(reformierakond);
         reformierakond.getValijad();
         x.valiErakond(sotsiaaldemokraadid);
         sotsiaaldemokraadid.getValijad();
         System.out.println(Statistika.valijateArv(erakonnad));
+
+        Genereerimine.valijateGenereerimine(100, erakonnad);
+        System.out.println(Statistika.valijateArv(erakonnad));
+
+
     }
 }

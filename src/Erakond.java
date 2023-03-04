@@ -37,4 +37,5 @@ public class Erakond {
                 ", valijad=" + valijad.toString() +
                 '}';
     }
+
 }
