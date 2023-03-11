@@ -33,10 +33,9 @@ public class Statistika {
             allesKohtadearv--;
         }
 
-        for (int i : erakondadeKohad) {
-            System.out.println("Erakonna kohad: " + i);
+        for (int i = 0; i < erakondadeKohad.length; i++) {
+            System.out.println(erakonnad.get(i).getNimi() + ", kohtade arv: " + erakondadeKohad[i]);
         }
-
     }
 
 
