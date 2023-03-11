@@ -4,6 +4,7 @@ public class Erakond {
     private String nimi;
     private ArrayList<Valija> valijad = new ArrayList<>();
 
+
     public Erakond(String nimi) {
         this.nimi = nimi;
     }
@@ -11,6 +12,7 @@ public class Erakond {
     public long getValijateArv() {
         return valijad.size();
     }
+
 
     public String getNimi() {
         return nimi;
