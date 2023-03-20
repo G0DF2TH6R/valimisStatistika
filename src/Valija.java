@@ -10,6 +10,10 @@ public class Valija {
         this.isikukood = isikukood;
     }
 
+    /**
+     * Valija valib erakonna, lisades valija objekti selle erakonna valijate nimekirja.
+     * @param valitavErakond erakond tüüpi objekt.
+     */
     public void valiErakond(Erakond valitavErakond) {
         if (valik == null) {
             this.valik = valitavErakond;

@@ -7,6 +7,12 @@ public class Statistika {
 
     }
 
+    /**
+     * Koostab antud erakondade ja kohtade arvu põhjal parlamendi, kus on erakondadele
+     * kohad jaotatud D'Hondt algoritmi põhjal
+     * @param erakonnad Parlamenti pääsenud erakondade nimekiri.
+     * @param kohtadeArv täisarv, mis määrab erakondadele jaotavad kohad.
+     */
     public static void riigikogu(ArrayList<Erakond> erakonnad, int kohtadeArv) {
         int allesKohtadearv = kohtadeArv;
         int erakondadeArv = erakonnad.size();
@@ -39,8 +45,13 @@ public class Statistika {
     }
 
 
-    // Tagastab nimekirja erakondadest kes ületasid antud lävendiprotsendi.
-    public static ArrayList<Erakond> lävend(int protsent, ArrayList<Erakond> erakonnad) {
+    /**
+     * Tagastab nimekirja erakondadest, kes ületasid antud lävendi.
+     * @param protsent antud lävendiprotsent.
+     * @param erakonnad nimekiri erakondadest.
+     * @return nimekiri erakondades, kes ületasid antud lävendi.
+     */
+    public static ArrayList<Erakond> lävend(double protsent, ArrayList<Erakond> erakonnad) {
         ArrayList<Erakond> vastus = new ArrayList<>();
         int koguValijateArv = valijateArv(erakonnad);
         for (Erakond erakond : erakonnad) {
@@ -52,7 +63,11 @@ public class Statistika {
         return vastus;
     }
 
-    // Leiab kõikide valijate arvu.
+    /**
+     * Leiab valijate arvu
+     * @param erakonnad antud erakondade nimekiri
+     * @return valijate arv kõikidest antud erakondadest
+     */
     public static int valijateArv(ArrayList<Erakond> erakonnad) {
         int vastus = 0;
         for (Erakond erakond : erakonnad) {
