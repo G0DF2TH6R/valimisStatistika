@@ -3,8 +3,12 @@ Autorid: Chris Matsiselts, Joonas Meister
 Projekti kirjeldus: Projekti eesmärk on luua süsteem, mille abil lisada valijaid, muuta valijate hääli, tagastada valimistulemuste statistikat
 ning koostada hüpoteetiline riigikogu koosseis, kus saab vaadata mitu kohta mingi erakond saaks tulemuste põhjal. 
 
-Klassid: ValimisStatistika - Peaklass
-Valija -
-Erakond - 
+Klassid: 
+ValimisStatistika - Peaklass
+Valija - Object valija tegemiseks, kellel on võimalik meetodi kaudu valida ja muuta Erakonda.
+Erakond - Loodud peaklassis Erakonnad, keda on võimalik hääletada object valija poolt ainult ühehäälega.
+Genereerimine - Genereerib randomi kaudu valjatele hääli et oleks võimalik arvutada liikmete arvu riigikogus.
+Statistika - Erakondade mandaatide arv riigikokkuja arendades võimalikud mandaadid.
+
 
 Tegevusprotsess: 04.03.2023 - Projekti teema valik, algne tööjaotus, esmased klassid paika pandud.
