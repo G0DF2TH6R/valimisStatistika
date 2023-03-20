@@ -28,10 +28,12 @@ public class ValimisStatistika {
         erakonnad.add(eesti200);
 
 
-        Genereerimine.valijateGenereerimine(1000, erakonnad);
-        System.out.println(Statistika.valijateArv(erakonnad));
 
-        Statistika.riigikogu(erakonnad, 101);
+        Genereerimine.valijateGenereerimine(101, erakonnad);
+      //  System.out.println(Statistika.valijateArv(erakonnad));
+        System.out.println("lavendiga:");
+        ArrayList<Erakond> test = Statistika.lävend(5,erakonnad);
+        Statistika.riigikogu(test, 101);
 
 
     }

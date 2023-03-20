@@ -55,7 +55,7 @@ public class Statistika {
         ArrayList<Erakond> vastus = new ArrayList<>();
         int koguValijateArv = valijateArv(erakonnad);
         for (Erakond erakond : erakonnad) {
-            double erakonnaProtsent = (double) erakond.getValijateArv() / koguValijateArv;
+            double erakonnaProtsent = (double) erakond.getValijateArv() / koguValijateArv * 100;
             if (erakonnaProtsent >= protsent) {
                 vastus.add(erakond);
             }
