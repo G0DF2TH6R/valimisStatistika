@@ -25,10 +25,12 @@ public class Valija {
         }
     }
 
+    public Erakond getValik() {
+        return valik;
+    }
+
     @Override
     public String toString() {
-        return "Valija{" +
-                "valik=" + valik.getNimi() +
-                '}';
+        return "Olete valinud " + valik.getNimi();
     }
 }
