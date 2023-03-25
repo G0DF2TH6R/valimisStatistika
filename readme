@@ -4,11 +4,26 @@ Projekti kirjeldus: Projekti eesmärk on luua süsteem, mille abil lisada valija
 ning koostada hüpoteetiline riigikogu koosseis, kus saab vaadata mitu kohta mingi erakond saaks tulemuste põhjal. 
 
 Klassid: 
-ValimisStatistika - Peaklass
+ValimisStatistika - Peaklass, kus toimub kasutajaga suhtlus läbi terminali.
 Valija - Object valija tegemiseks, kellel on võimalik meetodi kaudu valida ja muuta Erakonda.
-Erakond - Loodud peaklassis Erakonnad, keda on võimalik hääletada object valija poolt ainult ühehäälega.
+Erakond - Loodud peaklassis järjendisse erakonnad, keda on võimalik hääletada object valija poolt ainult ühehäälega.
 Genereerimine - Genereerib randomi kaudu valjatele hääli et oleks võimalik arvutada liikmete arvu riigikogus.
-Statistika - Erakondade mandaatide arv riigikokkuja arendades võimalikud mandaadid.
+Statistika - Meetodid, millega saab leida nimekiri erakondadest, kes ületasid valimiskünnise ning meetod, millega saab leida riigikogu kohtade jaotuse antud erakondade põhjal.
 
 
 Tegevusprotsess: 04.03.2023 - Projekti teema valik, algne tööjaotus, esmased klassid paika pandud.
+6.03-11.03 - Loodud klassid Valija, Erakond ning Genereerimine.
+13.03-19.03 - Loodud klass Statistika ning peaklass ValimisStatistika.
+20.03 - 25.03 - Lisatud kommunikatsiooni kasutajaga peaklassi ning viimistletud kasutusjuhend.
+
+Tööjaotus: Koostöös pandi paika projekti teema, ärireeglid ning projekti käigus käis pidev üksteise kontroll ning projekti täiendamine. 
+Joonas tegeles põhiliselt valijate genereerimisega ning peaklassiga ning Chris tegeles põhiliselt klassiga Statistika ning dokumentatsiooniga.
+Koostöös sai loodud klassid Valija ning Erakond.
+
+Mured: - Oleksime tahtnud programmi täiendada, lisades meetodeid, mis võimaldaks hüpoteetilisi koalitsioone luua jms.
+- Ei keskendunud eriti programmi optimiseerimisele, fookus kaldus rohkem sellele, et asi lihtsalt töötaks.
+
+Testimine: Testisime kõiki klasse individuaalselt kui ka tervikuna, ehk kuidas nad töötavad üksteisega. 
+Lõime järjendi Erakond tüüpi objektide jaoks, ning lisasime neile valijaid, et näha, kas valijate arvu muutumisel muutuvad ka erakondade kohtade arvud Riigikogus.
+Lisaks testisime Valija erakonnavahetust, printides algul välja valija valitud erakonna, seejärel valides talle uue erakonna, ning uuesti printides valija valitud erakonna.
+
