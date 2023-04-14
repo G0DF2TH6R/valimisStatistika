@@ -8,7 +8,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -47,14 +52,15 @@ public class Graafika extends Application {
         nupp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                boolean edukas0 = false;
+                boolean edukas1 = true;
+                boolean edukas2 = true;
+
                 System.out.println("logimiskatse");
                 if (!idKontroll(isikukood.getText())) {
+                    edukas0 = true;
                     error2.setFill(Color.BLACK);
                     error2.setText("Isikukood");
-                    System.out.println("Töötab");
-                    // Siit tuleks panna uus scene peale jms.
-
-
                 } else {
 
                     error2.setText("*Vigane sisestus!");
@@ -68,12 +74,14 @@ public class Graafika extends Application {
                     for (int i = 0; i < eesnimi.getText().length(); i++) {
                         char kontroll = eesnimi.getText().charAt(i);
                         if (mittesobivad.contains(Character.toString(kontroll))) {
+                            edukas1 = false;
                             error0.setText("*Vigane sisestus!");
                             error0.setFill(Color.RED);
                             break;
                         }
                     }
                 } else {
+                    edukas1 = false;
                     error0.setText("*Vigane sisestus!");
                     error0.setFill(Color.RED);
                 }
@@ -81,20 +89,25 @@ public class Graafika extends Application {
                 if (perenimi.getText().length() >= 2) {
                     error1.setText("Perekonnanimi");
                     error1.setFill(Color.BLACK);
-                    for (int i = 0; i <= perenimi.getText().length(); i++) {
+                    for (int i = 0; i < perenimi.getText().length(); i++) {
                         char kontroll = perenimi.getText().charAt(i);
                         if (mittesobivad.contains(Character.toString(kontroll)) && perenimi.getText().length() < 2) {
+                            edukas2 = false;
                             error1.setText("*Vigane sisestus!");
                             error1.setFill(Color.RED);
                             break;
                         }
                     }
-                }else {
+                } else {
+                    edukas2 = false;
                     error1.setText("*Vigane sisestus!");
                     error1.setFill(Color.RED);
                 }
 
-
+                if (edukas0 && edukas1 && edukas2) {
+                    primaryStage.setScene(ValikG());
+                    primaryStage.setResizable(true);
+                }
             }
         });
 
@@ -138,5 +151,31 @@ public class Graafika extends Application {
         if (!(0 < Integer.parseInt(osad[0]) && Integer.parseInt(osad[0]) <= 31)) return true;
 
         return false;
+    }
+
+    public static Scene ValikG() {
+
+        BorderPane bp = new BorderPane();
+        bp.setMinWidth(500);
+        bp.setMinHeight(500);
+        VBox vb = new VBox();
+        Text vali = new Text("Vali erakond antud nimekirjast: ");
+        bp.setTop(vali);
+
+        ToggleGroup tg = new ToggleGroup();
+
+        for (Erakond erakond : ValimisStatistika.getErakonnad()) {
+            RadioButton rb = new RadioButton();
+            rb.setText(erakond.getNimi());
+            rb.setToggleGroup(tg);
+            vb.getChildren().add(rb);
+        }
+
+
+        bp.setCenter(vb);
+
+        Scene valimine = new Scene(bp);
+
+        return valimine;
     }
 }
