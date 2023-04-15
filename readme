@@ -27,3 +27,17 @@ Testimine: Testisime kõiki klasse individuaalselt kui ka tervikuna, ehk kuidas 
 Lõime järjendi Erakond tüüpi objektide jaoks, ning lisasime neile valijaid, et näha, kas valijate arvu muutumisel muutuvad ka erakondade kohtade arvud Riigikogus.
 Lisaks testisime Valija erakonnavahetust, printides algul välja valija valitud erakonna, seejärel valides talle uue erakonna, ning uuesti printides valija valitud erakonna.
 
+Graafiline stseenide loogika
+1.	Tutvustus
+2.	Login Tehtud
+3.	ValikG 
+  a.	Teevalik
+4.	Main scene 
+  a.	Muuda valik
+  b.	Kontrolli valikut
+  c.	Vaata statistikat
+5.	Statistika (Tilepane (2x2))
+  a.	Kohtadega (Tilepane)
+  b.	sektordiagramm
+  c.	tulpdiagramm
+  d.	tekstdiagramm
