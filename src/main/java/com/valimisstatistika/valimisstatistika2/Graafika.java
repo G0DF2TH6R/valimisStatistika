@@ -1,12 +1,15 @@
 package com.valimisstatistika.valimisstatistika2;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -16,6 +19,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+
+import java.util.List;
 
 public class Graafika extends Application {
 
@@ -112,7 +118,7 @@ public class Graafika extends Application {
                     }
 
                     if (edukas0 && edukas1 && edukas2) {
-                        primaryStage.setScene(ValikG());
+                        primaryStage.setScene(graafilisedAndmed(primaryStage));
                         primaryStage.setResizable(true);
                     }
                 }
@@ -202,32 +208,69 @@ public class Graafika extends Application {
 
         return valimine;
     }
-    public static Scene Esileht(){
-        BorderPane bp = new BorderPane();
-        Text tere = new Text("Tere tulemast e-valimis keskonda");
-        tere.setTextAlignment(TextAlignment.CENTER);
-        bp.setTop(tere);
-        Text seletus = new Text("On võimalik valida üks endale kõige sobivam erakond. " +
-                "Peale valiku tegemist on võimlik vaadata jooksvalt statistikat.");
-        seletus.wrappingWidthProperty();
-        bp.setCenter(seletus);
 
-        Button edasi = new Button("Edasi");
-        edasi.setPadding(new Insets(0, 20, 0, 20));
-        edasi.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
-        edasi.setCursor(Cursor.HAND);
-        edasi.setAlignment(Pos.BASELINE_CENTER);
-        bp.setBottom(edasi);
+    public static Scene graafilisedAndmed(Stage PrimaryStage) {
+        List<Erakond> erakonnad = ValimisStatistika.getErakonnad();
 
-        edasi.setOnAction(new EventHandler<ActionEvent>() {
+        ObservableList<PieChart.Data> piechartData = FXCollections.observableArrayList();
+
+        for (Erakond erakond : erakonnad) {
+            piechartData.add(new PieChart.Data(erakond.getNimi(), erakond.getValijateArv()));
+        }
+
+        final PieChart chart = new PieChart(piechartData);
+
+
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final BarChart<String,Number> bc =
+                new BarChart<String,Number>(xAxis,yAxis);
+        bc.setTitle("Erakondade häälesaak");
+        xAxis.setLabel("Erakond");
+        yAxis.setLabel("Valijate arv");
+
+        for (Erakond erakond : erakonnad) {
+            XYChart.Series series = new XYChart.Series();
+            series.setName(erakond.getNimi());
+            series.getData().add(new XYChart.Data(erakond.getNimi(), erakond.getValijateArv()));
+            bc.getData().add(series);
+        }
+
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                PrimaryStage.setScene(ValikG());
             }
-        });
+        };
+
+        EventHandler<ActionEvent> katkesta = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Platform.exit();
+            }
+        };
+
+        Button tagasi = new Button("Tagasi");
+        tagasi.setOnAction(event);
+        tagasi.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
+
+        Button lopeta = new Button("Lõpeta");
+        lopeta.setOnAction(katkesta);
+        lopeta.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
 
 
-        Scene esileht = new Scene(bp, 500,500);
-        return esileht;
+
+
+        TilePane tp = new TilePane();
+
+        tp.setPrefColumns(2);
+
+        tp.getChildren().add(chart);
+        tp.getChildren().add(bc);
+        tp.getChildren().add(tagasi);
+        tp.getChildren().add(lopeta);
+        Scene root = new Scene(tp);
+
+        return root;
     }
 }
