@@ -19,8 +19,10 @@ import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Graafika extends Application {
+    private static Valija aktiivneValija;
 
     public static void main(String[] args) {
         launch(args);
@@ -115,6 +117,8 @@ public class Graafika extends Application {
                     }
 
                     if (edukas0 && edukas1 && edukas2) {
+                        aktiivneValija = new Valija(eesnimi.getText(),perenimi.getText(),isikukood.getText());
+
                         primaryStage.setScene(ValikG(primaryStage));
                         primaryStage.setResizable(true);
                     }
@@ -224,6 +228,24 @@ public class Graafika extends Application {
             rb.setToggleGroup(tg);
             vb.getChildren().add(rb);
         }
+        Button kinnita = new Button("Kinnita valik");
+        kinnita.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
+        kinnita.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                for (Erakond erakond : ValimisStatistika.getErakonnad()) {
+                    if(erakond.getNimi().equals(tg.getSelectedToggle().toString().substring(tg.getSelectedToggle().toString().indexOf("'")+1,tg.getSelectedToggle().toString().lastIndexOf("'")))){
+                        aktiivneValija.valiErakond(erakond);
+                    }
+                }
+
+                System.out.println(tg.getSelectedToggle().toString());
+                System.out.println(aktiivneValija.getValik());
+            }
+        });
+
+        vb.getChildren().add(kinnita);
+
 
 
         TilePane tp =new TilePane(vb);
