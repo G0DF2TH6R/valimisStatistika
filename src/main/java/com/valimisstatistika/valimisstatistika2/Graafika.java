@@ -1,6 +1,7 @@
 package com.valimisstatistika.valimisstatistika2;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -117,7 +118,7 @@ public class Graafika extends Application {
                     }
 
                     if (edukas0 && edukas1 && edukas2) {
-                        primaryStage.setScene(ValikG());
+                        primaryStage.setScene(graafilisedAndmed(primaryStage));
                         primaryStage.setResizable(true);
                     }
                 }
@@ -207,35 +208,6 @@ public class Graafika extends Application {
 
         return valimine;
     }
-    public static Scene Esileht(){
-        BorderPane bp = new BorderPane();
-        Text tere = new Text("Tere tulemast e-valimis keskonda");
-        tere.setTextAlignment(TextAlignment.CENTER);
-        bp.setTop(tere);
-        Text seletus = new Text("On võimalik valida üks endale kõige sobivam erakond. " +
-                "Peale valiku tegemist on võimlik vaadata jooksvalt statistikat.");
-        seletus.wrappingWidthProperty();
-        bp.setCenter(seletus);
-
-        Button edasi = new Button("Edasi");
-        edasi.setPadding(new Insets(0, 20, 0, 20));
-        edasi.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
-        edasi.setCursor(Cursor.HAND);
-        edasi.setAlignment(Pos.BASELINE_CENTER);
-        bp.setBottom(edasi);
-
-        edasi.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
-
-
-        Scene esileht = new Scene(bp, 500,500);
-        return esileht;
-    }
-
 
     public static Scene graafilisedAndmed(Stage PrimaryStage) {
         List<Erakond> erakonnad = ValimisStatistika.getErakonnad();
@@ -264,14 +236,39 @@ public class Graafika extends Application {
             bc.getData().add(series);
         }
 
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                PrimaryStage.setScene(ValikG());
+            }
+        };
+
+        EventHandler<ActionEvent> katkesta = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Platform.exit();
+            }
+        };
+
+        Button tagasi = new Button("Tagasi");
+        tagasi.setOnAction(event);
+        tagasi.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
+
+        Button lopeta = new Button("Lõpeta");
+        lopeta.setOnAction(katkesta);
+        lopeta.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
 
 
 
 
         TilePane tp = new TilePane();
 
+        tp.setPrefColumns(2);
+
         tp.getChildren().add(chart);
         tp.getChildren().add(bc);
+        tp.getChildren().add(tagasi);
+        tp.getChildren().add(lopeta);
         Scene root = new Scene(tp);
 
         return root;
