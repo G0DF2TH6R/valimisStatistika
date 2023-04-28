@@ -11,10 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -118,7 +115,7 @@ public class Graafika extends Application {
                     }
 
                     if (edukas0 && edukas1 && edukas2) {
-                        primaryStage.setScene(graafilisedAndmed(primaryStage));
+                        primaryStage.setScene(ValikG(primaryStage));
                         primaryStage.setResizable(true);
                     }
                 }
@@ -183,14 +180,41 @@ public class Graafika extends Application {
         return false;
     }
 
-    public static Scene ValikG() {
+    public static Scene ValikG(Stage primariStage) {
+
+        VBox juur = new VBox(5);
+        juur.setPadding(new Insets(20)); // lisatud vahemik servadest
+        juur.setAlignment(Pos.CENTER); // kohanda VBox keskele
 
         BorderPane bp = new BorderPane();
-        bp.setMinWidth(500);
-        bp.setMinHeight(500);
+        bp.setPrefSize(500, 500); // asendatud setMinWidth() ja setMinHeight() meetodid prefSize() meetodiga
+
         VBox vb = new VBox();
         Text vali = new Text("Vali erakond antud nimekirjast: ");
+        vali.setStyle("-fx-font-size: 24px; -fx-font-weight: bold");
         bp.setTop(vali);
+        BorderPane.setAlignment(vali, Pos.CENTER); // kohanda Text objekt keskele
+
+        Button lõpetaNupp = new Button("Lõpeta");
+        lõpetaNupp.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
+
+
+        Button statistikaNupp = new Button("Vaata statistikat");
+        statistikaNupp.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
+
+        statistikaNupp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                primariStage.setScene(graafilisedAndmed(primariStage));
+            }
+        });
+
+        lõpetaNupp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Platform.exit();
+            }
+        });
 
         ToggleGroup tg = new ToggleGroup();
 
@@ -202,9 +226,22 @@ public class Graafika extends Application {
         }
 
 
-        bp.setCenter(vb);
+        TilePane tp =new TilePane(vb);
 
-        Scene valimine = new Scene(bp);
+        tp.setAlignment(Pos.CENTER);
+
+        bp.setCenter(tp);
+
+
+        HBox nupud = new HBox(50);
+        nupud.getChildren().addAll(lõpetaNupp, statistikaNupp);
+        nupud.setAlignment(Pos.CENTER); // kohanda HBox keskele
+        nupud.setPadding(new Insets(20, 0, 0, 0)); // lisatud vahemik ülevalt
+        bp.setBottom(nupud);
+
+        juur.getChildren().add(bp);
+
+        Scene valimine = new Scene(juur, 500, 500);
 
         return valimine;
     }
@@ -239,7 +276,7 @@ public class Graafika extends Application {
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                PrimaryStage.setScene(ValikG());
+                PrimaryStage.setScene(ValikG(PrimaryStage));
             }
         };
 
