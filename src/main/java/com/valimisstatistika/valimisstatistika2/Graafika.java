@@ -1,6 +1,9 @@
 package com.valimisstatistika.valimisstatistika2;
 
 import javafx.application.Application;
+
+import java.io.*;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,11 +21,14 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Graafika extends Application {
     private static Valija aktiivneValija;
+    private static File f;
 
     public static void main(String[] args) {
         launch(args);
@@ -40,6 +46,14 @@ public class Graafika extends Application {
 
         Button edasiNupp = new Button("Alusta");
         edasiNupp.setOnAction(event -> {
+            f = new File("statistika.txt");
+            if (!f.exists()) {
+                try {
+                    Genereerimine.valijateGenereerimine(200, ValimisStatistika.getErakonnad(), f.getPath());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             VBox vBox = new VBox();
             vBox.setSpacing(10);
@@ -141,7 +155,6 @@ public class Graafika extends Application {
 
             primaryStage.setTitle("valimised");
             primaryStage.setScene(login);
-            //primaryStage.setScene(Esileht());
             primaryStage.setResizable(false);
         });
 
@@ -209,7 +222,11 @@ public class Graafika extends Application {
         statistikaNupp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                primariStage.setScene(graafilisedAndmed(primariStage));
+                try {
+                    primariStage.setScene(graafilisedAndmed(primariStage));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -233,11 +250,21 @@ public class Graafika extends Application {
         kinnita.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                for (Erakond erakond : ValimisStatistika.getErakonnad()) {
-                    if(erakond.getNimi().equals(tg.getSelectedToggle().toString().substring(tg.getSelectedToggle().toString().indexOf("'")+1,tg.getSelectedToggle().toString().lastIndexOf("'")))){
-                        aktiivneValija.valiErakond(erakond);
+                try {
+                    File valijaHaal = new File("valija.txt");
+                    BufferedWriter bwr = new BufferedWriter(new FileWriter(valijaHaal));
+                    for (Erakond erakond : ValimisStatistika.getErakonnad()) {
+                        if(erakond.getNimi().equals(tg.getSelectedToggle().toString().substring(tg.getSelectedToggle().toString().indexOf("'")+1,tg.getSelectedToggle().toString().lastIndexOf("'")))){
+                            aktiivneValija.valiErakond(erakond);
+                            bwr.write(aktiivneValija.getValik().getNimi());
+                        }
                     }
+                    bwr.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+
+
 
                 System.out.println(tg.getSelectedToggle().toString());
                 System.out.println(aktiivneValija.getValik());
@@ -268,14 +295,50 @@ public class Graafika extends Application {
         return valimine;
     }
 
-    public static Scene graafilisedAndmed(Stage PrimaryStage) {
+    public static Scene graafilisedAndmed(Stage PrimaryStage) throws IOException {
         List<Erakond> erakonnad = ValimisStatistika.getErakonnad();
+
+        Map<String, Integer> tulemused = new HashMap<>();
+
+        BufferedReader br = new BufferedReader(new FileReader(f));
+        String rida = br.readLine();
+
+        for (Erakond erakond : erakonnad) {
+            tulemused.put(erakond.getNimi(), 0);
+        }
+
+        while (rida != null) {
+            for (Erakond erakond : erakonnad) {
+                if (rida.trim().equals(erakond.getNimi())) {
+                    int ajutine = tulemused.get(erakond.getNimi());
+                    tulemused.remove(erakond.getNimi());
+                    tulemused.put(erakond.getNimi(), ajutine + 1);
+                }
+                rida = br.readLine();
+            }
+        }
+
+        BufferedReader valija = new BufferedReader(new FileReader("valija.txt"));
+        String valijaValik = valija.readLine();
+
+        for (Erakond erakond : erakonnad) {
+            if (valijaValik.trim().equals(erakond.getNimi())) {
+                int ajutine = tulemused.get(erakond.getNimi());
+                tulemused.remove(erakond.getNimi());
+                tulemused.put(erakond.getNimi(), ajutine + 1);
+            }
+        }
+
+        String[] parteid = tulemused.keySet().toArray(new String[0]);
 
         ObservableList<PieChart.Data> piechartData = FXCollections.observableArrayList();
 
-        for (Erakond erakond : erakonnad) {
-            piechartData.add(new PieChart.Data(erakond.getNimi(), erakond.getValijateArv()));
+
+        for (int i = 0; i < tulemused.size(); i++) {
+            piechartData.add(new PieChart.Data(parteid[i], tulemused.get(parteid[i])));
         }
+
+
 
         final PieChart chart = new PieChart(piechartData);
 
@@ -288,10 +351,10 @@ public class Graafika extends Application {
         xAxis.setLabel("Erakond");
         yAxis.setLabel("Valijate arv");
 
-        for (Erakond erakond : erakonnad) {
+        for (int i = 0; i < parteid.length; i++) {
             XYChart.Series series = new XYChart.Series();
-            series.setName(erakond.getNimi());
-            series.getData().add(new XYChart.Data(erakond.getNimi(), erakond.getValijateArv()));
+            series.setName(parteid[i]);
+            series.getData().add(new XYChart.Data(parteid[i], tulemused.get(parteid[i])));
             bc.getData().add(series);
         }
 
@@ -329,6 +392,7 @@ public class Graafika extends Application {
         tp.getChildren().add(tagasi);
         tp.getChildren().add(lopeta);
         Scene root = new Scene(tp);
+        PrimaryStage.setResizable(false);
 
         return root;
     }
