@@ -1,10 +1,8 @@
 package com.valimisstatistika.valimisstatistika2;
 
 import javafx.application.Application;
-
-import java.io.*;
-
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,19 +12,23 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.collections.FXCollections;
 
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Graafika extends Application {
     private static Valija aktiivneValija;
     private static File f;
+    private static Text valik = new Text();
 
     public static void main(String[] args) {
         launch(args);
@@ -197,17 +199,24 @@ public class Graafika extends Application {
     public static Scene ValikG(Stage primariStage) {
 
         VBox juur = new VBox(5);
-        juur.setPadding(new Insets(20)); // lisatud vahemik servadest
-        juur.setAlignment(Pos.CENTER); // kohanda VBox keskele
+        juur.setPadding(new Insets(20));
+        juur.setAlignment(Pos.CENTER);
 
         BorderPane bp = new BorderPane();
-        bp.setPrefSize(500, 500); // asendatud setMinWidth() ja setMinHeight() meetodid prefSize() meetodiga
+        bp.setPrefSize(500, 500);
 
         VBox vb = new VBox();
+
+
         Text vali = new Text("Vali erakond antud nimekirjast: ");
         vali.setStyle("-fx-font-size: 24px; -fx-font-weight: bold");
-        bp.setTop(vali);
-        BorderPane.setAlignment(vali, Pos.CENTER); // kohanda Text objekt keskele
+
+        VBox vbTekst = new VBox();
+        vbTekst.getChildren().add(vali);
+        vbTekst.setAlignment(Pos.CENTER);
+        bp.setTop(vbTekst);
+
+        BorderPane.setAlignment(vali, Pos.CENTER);
 
         Button lõpetaNupp = new Button("Lõpeta");
         lõpetaNupp.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
@@ -244,10 +253,16 @@ public class Graafika extends Application {
         }
         Button kinnita = new Button("Kinnita valik");
         kinnita.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
+
+
+        vbTekst.getChildren().add(valik);
         kinnita.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
+                    if (valik.isVisible()){
+                        vbTekst.getChildren().remove(valik);
+                    }
                     File valijaHaal = new File("valija.txt");
                     BufferedWriter bwr = new BufferedWriter(new FileWriter(valijaHaal));
                     for (Erakond erakond : ValimisStatistika.getErakonnad()) {
@@ -257,6 +272,10 @@ public class Graafika extends Application {
                         }
                     }
                     bwr.close();
+                    String valitudErakond = tg.getSelectedToggle().toString().substring(tg.getSelectedToggle().toString().indexOf("'") + 1, tg.getSelectedToggle().toString().lastIndexOf("'"));
+                    valik.setText("Teie kinnitatud valik on: " +valitudErakond);
+                    valik.setStyle("-fx-font-size: 18px");
+                    vbTekst.getChildren().add(valik);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -314,7 +333,6 @@ public class Graafika extends Application {
         }
 
 
-
         BufferedReader valija = new BufferedReader(new FileReader("valija.txt"));
         String valijaValik = valija.readLine();
 
@@ -325,7 +343,6 @@ public class Graafika extends Application {
                 tulemused.put(erakond.getNimi(), ajutine + 1);
             }
         }
-
 
 
         ObservableList<PieChart.Data> piechartData = FXCollections.observableArrayList();
