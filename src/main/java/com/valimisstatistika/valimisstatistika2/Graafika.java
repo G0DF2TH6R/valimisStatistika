@@ -14,6 +14,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -21,10 +22,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Graafika extends Application {
     private static Valija aktiivneValija;
@@ -49,7 +47,7 @@ public class Graafika extends Application {
             f = new File("statistika.txt");
             if (!f.exists()) {
                 try {
-                    Genereerimine.valijateGenereerimine(200, ValimisStatistika.getErakonnad(), f.getPath());
+                    Genereerimine.valijateGenereerimine(10000, ValimisStatistika.getErakonnad(), f.getPath());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -58,7 +56,6 @@ public class Graafika extends Application {
             VBox vBox = new VBox();
             vBox.setSpacing(10);
 
-            Text pealkiri2 = new Text("Tere tulemast meie valimisteemalisse programmi!");
             pealkiri.setStyle("-fx-font-size: 12pt");
             Text tuhjus = new Text("");
             Text tuhjus1 = new Text("");
@@ -131,7 +128,7 @@ public class Graafika extends Application {
                     }
 
                     if (edukas0 && edukas1 && edukas2) {
-                        aktiivneValija = new Valija(eesnimi.getText(),perenimi.getText(),isikukood.getText());
+                        aktiivneValija = new Valija(eesnimi.getText(), perenimi.getText(), isikukood.getText());
 
                         primaryStage.setScene(ValikG(primaryStage));
                         primaryStage.setResizable(true);
@@ -254,7 +251,7 @@ public class Graafika extends Application {
                     File valijaHaal = new File("valija.txt");
                     BufferedWriter bwr = new BufferedWriter(new FileWriter(valijaHaal));
                     for (Erakond erakond : ValimisStatistika.getErakonnad()) {
-                        if(erakond.getNimi().equals(tg.getSelectedToggle().toString().substring(tg.getSelectedToggle().toString().indexOf("'")+1,tg.getSelectedToggle().toString().lastIndexOf("'")))){
+                        if (erakond.getNimi().equals(tg.getSelectedToggle().toString().substring(tg.getSelectedToggle().toString().indexOf("'") + 1, tg.getSelectedToggle().toString().lastIndexOf("'")))) {
                             aktiivneValija.valiErakond(erakond);
                             bwr.write(aktiivneValija.getValik().getNimi());
                         }
@@ -265,7 +262,6 @@ public class Graafika extends Application {
                 }
 
 
-
                 System.out.println(tg.getSelectedToggle().toString());
                 System.out.println(aktiivneValija.getValik());
             }
@@ -274,8 +270,7 @@ public class Graafika extends Application {
         vb.getChildren().add(kinnita);
 
 
-
-        TilePane tp =new TilePane(vb);
+        TilePane tp = new TilePane(vb);
 
         tp.setAlignment(Pos.CENTER);
 
@@ -296,27 +291,29 @@ public class Graafika extends Application {
     }
 
     public static Scene graafilisedAndmed(Stage PrimaryStage) throws IOException {
-        List<Erakond> erakonnad = ValimisStatistika.getErakonnad();
+        ArrayList<Erakond> erakonnad = ValimisStatistika.getErakonnad();
 
         Map<String, Integer> tulemused = new HashMap<>();
-
         BufferedReader br = new BufferedReader(new FileReader(f));
         String rida = br.readLine();
+        rida = rida.trim();
 
         for (Erakond erakond : erakonnad) {
             tulemused.put(erakond.getNimi(), 0);
         }
+        try {
 
-        while (rida != null) {
-            for (Erakond erakond : erakonnad) {
-                if (rida.trim().equals(erakond.getNimi())) {
-                    int ajutine = tulemused.get(erakond.getNimi());
-                    tulemused.remove(erakond.getNimi());
-                    tulemused.put(erakond.getNimi(), ajutine + 1);
-                }
-                rida = br.readLine();
+
+            while (!rida.equals("null")) {
+                String[] andmed = rida.split(";");
+                tulemused.replace(andmed[0], Integer.parseInt(andmed[1]));
+                rida = br.readLine().trim();
             }
+        } catch (NullPointerException ignored) {
+
         }
+
+
 
         BufferedReader valija = new BufferedReader(new FileReader("valija.txt"));
         String valijaValik = valija.readLine();
@@ -329,34 +326,42 @@ public class Graafika extends Application {
             }
         }
 
-        String[] parteid = tulemused.keySet().toArray(new String[0]);
+
 
         ObservableList<PieChart.Data> piechartData = FXCollections.observableArrayList();
 
-
-        for (int i = 0; i < tulemused.size(); i++) {
-            piechartData.add(new PieChart.Data(parteid[i], tulemused.get(parteid[i])));
+        for (String s : tulemused.keySet()) {
+            piechartData.add(new PieChart.Data(s, tulemused.get(s)));
         }
 
 
+        Map<String, Integer> riigikoguKohad = Statistika.riigikogu(tulemused, 101);
+        System.out.println(riigikoguKohad);
+
+        String[] parteid = riigikoguKohad.keySet().toArray(new String[0]);
+
 
         final PieChart chart = new PieChart(piechartData);
+        chart.setTitle("Erakondade häältesaak");
 
 
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
-        final BarChart<String,Number> bc =
-                new BarChart<String,Number>(xAxis,yAxis);
+        final BarChart<String, Number> bc =
+                new BarChart<String, Number>(xAxis, yAxis);
         bc.setTitle("Erakondade häälesaak");
         xAxis.setLabel("Erakond");
         yAxis.setLabel("Valijate arv");
 
-        for (int i = 0; i < parteid.length; i++) {
+        for (String s : parteid) {
             XYChart.Series series = new XYChart.Series();
-            series.setName(parteid[i]);
-            series.getData().add(new XYChart.Data(parteid[i], tulemused.get(parteid[i])));
+            series.setName(s);
+            series.getData().add(new XYChart.Data(s, riigikoguKohad.get(s)));
             bc.getData().add(series);
         }
+
+
+        bc.setTitle("Erakondade kohajaotus Riigikogus");
 
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             @Override
@@ -379,8 +384,6 @@ public class Graafika extends Application {
         Button lopeta = new Button("Lõpeta");
         lopeta.setOnAction(katkesta);
         lopeta.setStyle("-fx-background-color: #00adff; -fx-text-fill: white");
-
-
 
 
         TilePane tp = new TilePane();

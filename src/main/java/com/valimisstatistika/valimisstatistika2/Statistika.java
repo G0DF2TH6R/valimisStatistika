@@ -1,6 +1,8 @@
 package com.valimisstatistika.valimisstatistika2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Statistika {
 
@@ -9,47 +11,42 @@ public class Statistika {
 
     }
 
-    /**
-     * Koostab antud erakondade ja kohtade arvu põhjal parlamendi, kus on erakondadele
-     * kohad jaotatud D'Hondt algoritmi põhjal
-     * @param erakonnad Parlamenti pääsenud erakondade nimekiri.
-     * @param kohtadeArv täisarv, mis määrab erakondadele jaotavad kohad.
-     */
-    public static void riigikogu(ArrayList<Erakond> erakonnad, int kohtadeArv) {
-        int allesKohtadearv = kohtadeArv;
-        int erakondadeArv = erakonnad.size();
-        int[] erakondadeKohad = new int[erakondadeArv];
-        long[] valijateArvud = new long[erakondadeArv];
+    public static Map<String, Integer> riigikogu(Map<String, Integer> tulemused, int kohtadeArv) {
+        Map<String, Integer> riigikoguKohad = new HashMap<>();
+        try {
 
-        for (int i = 0; i < erakondadeArv; i++) {
-            valijateArvud[i] = erakonnad.get(i).getValijateArv();
-            erakondadeKohad[i] = 0;
-        }
-
-
-        for (int i = 0; i < kohtadeArv; i++) {
-            long suurimValijateArv = 0;
-            int erakonnaIndeks = 0;
-            for (Erakond erakond : erakonnad) {
-                if (valijateArvud[erakonnad.indexOf(erakond)] > suurimValijateArv) {
-                    suurimValijateArv = valijateArvud[erakonnad.indexOf(erakond)];
-                    erakonnaIndeks = erakonnad.indexOf(erakond);
-                }
+            for (String s : tulemused.keySet()) {
+                riigikoguKohad.put(s, 0);
             }
-            erakondadeKohad[erakonnaIndeks]++;
-            valijateArvud[erakonnaIndeks] = Math.round(erakonnad.get(erakonnaIndeks).getValijateArv() / (erakondadeKohad[erakonnaIndeks] + 1.0));
-            allesKohtadearv--;
-        }
 
-        for (int i = 0; i < erakondadeKohad.length; i++) {
-            System.out.println(erakonnad.get(i).getNimi() + ", kohtade arv: " + erakondadeKohad[i]);
+
+            for (int i = 0; i < kohtadeArv; i++) {
+                long suurimValijateArv = 0;
+                String suurimErakondValijad = "";
+
+
+                for (String erakond : tulemused.keySet()) {
+                    if (tulemused.get(erakond) > suurimValijateArv) {
+                        suurimValijateArv = tulemused.get(erakond);
+                        suurimErakondValijad = erakond;
+                    }
+                }
+
+
+                riigikoguKohad.replace(suurimErakondValijad, riigikoguKohad.get(suurimErakondValijad) + 1);
+                tulemused.replace(suurimErakondValijad, (int) Math.round(tulemused.get(suurimErakondValijad) / (riigikoguKohad.get(suurimErakondValijad) + 1.0)));
+            }
+
+        } catch (NullPointerException ignored) {
         }
+        return riigikoguKohad;
     }
 
 
     /**
      * Tagastab nimekirja erakondadest, kes ületasid antud lävendi.
-     * @param protsent antud lävendiprotsent.
+     *
+     * @param protsent  antud lävendiprotsent.
      * @param erakonnad nimekiri erakondadest.
      * @return nimekiri erakondades, kes ületasid antud lävendi.
      */
@@ -67,6 +64,7 @@ public class Statistika {
 
     /**
      * Leiab valijate arvu
+     *
      * @param erakonnad antud erakondade nimekiri
      * @return valijate arv kõikidest antud erakondadest
      */
