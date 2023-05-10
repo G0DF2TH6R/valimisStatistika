@@ -9,13 +9,7 @@ import static java.lang.Math.random;
 
 public class Genereerimine {
 
-    /**
-     * Genereerib soovitud arvu valija tüüpi objekte antud erakondadele.
-     *
-     * @param n              soovitud arv valijaid.
-     * @param erakondadeList antud nimekiri erakondi, kuhu genereeritakse valijaid.
-     * @return Nimekiri loodud valijatest ning keda nad valisid.
-     */
+
     public static void valijateGenereerimine(int n, ArrayList<Erakond> erakondadeList, String path) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(path));
         Map<String, Integer> toetajad = new HashMap<>();
