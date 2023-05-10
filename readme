@@ -4,25 +4,34 @@ Projekti kirjeldus: Projekti eesmärk on luua süsteem, mille abil lisada valija
 ning koostada hüpoteetiline riigikogu koosseis, kus saab vaadata mitu kohta mingi erakond saaks tulemuste põhjal. 
 
 Klassid: 
-ValimisStatistika - Peaklass, kus toimub kasutajaga suhtlus läbi terminali.
+ValimisStatistika - klass, Luuakse erakonnad
 Valija - Object valija tegemiseks, kellel on võimalik meetodi kaudu valida ja muuta Erakonda.
 Erakond - Loodud peaklassis järjendisse erakonnad, keda on võimalik hääletada object valija poolt ainult ühehäälega.
 Genereerimine - Genereerib randomi kaudu valjatele hääli et oleks võimalik arvutada liikmete arvu riigikogus.
 Statistika - Meetodid, millega saab leida nimekiri erakondadest, kes ületasid valimiskünnise ning meetod, millega saab leida riigikogu kohtade jaotuse antud erakondade põhjal.
+Graafika - Peaklass, mis kasutab varasemalt loodud klasside meetodeid ja objekte.
 
 
 Tegevusprotsess: 04.03.2023 - Projekti teema valik, algne tööjaotus, esmased klassid paika pandud.
 6.03-11.03 - Loodud klassid Valija, Erakond ning Genereerimine.
 13.03-19.03 - Loodud klass Statistika ning peaklass ValimisStatistika.
 20.03 - 25.03 - Lisatud kommunikatsiooni kasutajaga peaklassi ning viimistletud kasutusjuhend.
-7.05-10.05 - Eemdaldatud liigne kood ning elementide ümbernimetamine, et kood oleks loetavam.
+10.04 ja 14.04 teime kaks päeva koosolles enamus suured ideed ja vajamisńevad klassid
+28.04 saime kokku ja näitasime oma tehtud koode ja täiustasime neid
+29.04-07.05 lihvisime pisiasju ja Panime kokku lõpptulemuse
+10.05 koodi korrastus ja esitamine
+
+
 
 Tööjaotus: Koostöös pandi paika projekti teema, ärireeglid ning projekti käigus käis pidev üksteise kontroll ning projekti täiendamine. 
-Joonas tegeles põhiliselt valijate genereerimisega ning peaklassiga ning Chris tegeles põhiliselt klassiga Statistika ning dokumentatsiooniga.
-Koostöös sai loodud klassid Valija ning Erakond.
+Joonas tegeles põhiliselt valijate genereerimisega, valiku ja sissejuhatava lehega ning Chris tegeles põhiliselt klassiga Statistika ja graafilise statistika kuvamisega, ning valija faili kirjutamisega ning 
+koos tegelesime peaklassiga ja  dokumentatsiooniga.
+Koosolekutel lõime pöhilised klassid ja jaotasime tööd.
 
 Mured: - Oleksime tahtnud programmi täiendada, lisades meetodeid, mis võimaldaks hüpoteetilisi koalitsioone luua jms.
 - Ei keskendunud eriti programmi optimiseerimisele, fookus kaldus rohkem sellele, et asi lihtsalt töötaks.
+- Algselt tahtsime liiga spetsiifiliselt kõike välja võtta ja kaardistada, mis osutus meie oskuste juures väga ajakulukaks ja seetõttu jäid mõningad ideed välja.
+- ideaalis oleks soovinud paremini teha valijate häälte hoidmist.
 
 Testimine: Testisime kõiki klasse individuaalselt kui ka tervikuna, ehk kuidas nad töötavad üksteisega. 
 Lõime järjendi Erakond tüüpi objektide jaoks, ning lisasime neile valijaid, et näha, kas valijate arvu muutumisel muutuvad ka erakondade kohtade arvud Riigikogus.
@@ -30,15 +39,9 @@ Lisaks testisime Valija erakonnavahetust, printides algul välja valija valitud 
 
 Graafiline stseenide loogika
 1.	Tutvustus
-2.	Login Tehtud
-3.	ValikG 
+2.	Login 
+3.	Valik  
   a.	Teevalik
-4.	Main scene 
-  a.	Muuda valik
-  b.	Kontrolli valikut
-  c.	Vaata statistikat
-5.	Statistika (Tilepane (2x2))
-  a.	Kohtadega (Tilepane)
+5.	Statistika 
   b.	sektordiagramm
   c.	tulpdiagramm
-  d.	tekstdiagramm
